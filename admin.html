@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de administración — Sorteos</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+  <header class="cabecera">
+    <div class="cabecera-contenido">
+      <span class="logo">🎟️ Sorteos — Admin</span>
+      <nav id="nav-sesion">
+        <a href="index.html">Ver sitio</a>
+        <button class="boton-secundario" onclick="cerrarSesion()">Salir</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-grid">
+
+    <section id="admin-guard" class="tarjeta">
+      <p class="cargando">Verificando acceso…</p>
+    </section>
+
+    <div id="admin-contenido" class="admin-grid oculto">
+
+      <!-- Sorteo activo / crear sorteo -->
+      <section class="tarjeta">
+        <h2>Sorteo</h2>
+        <div id="admin-sorteo"></div>
+      </section>
+
+      <!-- Órdenes -->
+      <section class="tarjeta">
+        <h2>Órdenes de compra</h2>
+        <div class="tabla-scroll" id="admin-ordenes">
+          <p class="cargando">Cargando…</p>
+        </div>
+      </section>
+
+      <!-- Usuarios -->
+      <section class="tarjeta">
+        <h2>Usuarios</h2>
+        <p class="sorteo-descripcion">Los usuarios se registran y verifican solos. Aquí puedes bloquear
+        una cuenta (no podrá comprar) o volver a autorizarla.</p>
+        <div class="tabla-scroll" id="admin-usuarios">
+          <p class="cargando">Cargando…</p>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
