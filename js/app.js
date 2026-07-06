@@ -32,7 +32,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 async function renderizarNav() {
   const nav = document.getElementById("nav-sesion");
   if (!sesionActual) {
-    nav.innerHTML = '<button class="boton-secundario" onclick="irAlAcceso()">Iniciar sesión</button>';
+    nav.innerHTML = `
+      <button class="boton-secundario" onclick="abrirPanelAuth('login')">Iniciar sesión</button>
+      <button class="boton-cta" onclick="abrirPanelAuth('registro')">Crear cuenta</button>
+    `;
     return;
   }
   const email = sesionActual.user.email;
@@ -53,14 +56,31 @@ async function renderizarNav() {
 }
 
 function renderizarAuth() {
-  const seccion = document.getElementById("seccion-auth");
-  seccion.classList.toggle("oculto", !!sesionActual);
+  if (sesionActual) cerrarPanelAuth();
   document.getElementById("seccion-numeros").classList.toggle("oculto", !sesionActual);
 }
 
-function irAlAcceso() {
-  document.getElementById("seccion-auth").scrollIntoView({ behavior: "smooth" });
+// ---------- Panel de cuenta (estilo Google) ----------
+
+function abrirPanelAuth(tab) {
+  document.getElementById("panel-auth").classList.remove("oculto");
+  mostrarTab(tab || "login");
 }
+
+function cerrarPanelAuth() {
+  document.getElementById("panel-auth").classList.add("oculto");
+}
+
+// Cerrar al hacer clic fuera de la cabecera o con Escape
+document.addEventListener("click", (evento) => {
+  const panel = document.getElementById("panel-auth");
+  if (!panel || panel.classList.contains("oculto")) return;
+  if (!evento.target.closest(".cabecera")) cerrarPanelAuth();
+});
+
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape") cerrarPanelAuth();
+});
 
 function mostrarTab(cual) {
   document.getElementById("tab-login").classList.toggle("activa", cual === "login");
@@ -173,7 +193,7 @@ async function cargarSorteo() {
           <label for="compra-cantidad">Cantidad</label>
           <select id="compra-cantidad">${opciones}</select>
         </div>
-        <button class="boton-principal" id="boton-comprar" onclick="comprar()">Comprar y participar</button>
+        <button class="boton-principal" id="boton-comprar" onclick="comprar(event)">Comprar y participar</button>
         <p class="nota-pago">Pago seguro con Flow — Webpay, tarjetas de crédito y débito.
         Cada ticket incluye de regalo un número único de sorteo.</p>
       </div>
@@ -210,11 +230,10 @@ async function mostrarUltimoResultado(seccion) {
 
 // ---------- Compra ----------
 
-async function comprar() {
+async function comprar(evento) {
   if (!sesionActual) {
-    mostrarTab("registro");
-    document.getElementById("seccion-auth").classList.remove("oculto");
-    irAlAcceso();
+    if (evento) evento.stopPropagation();
+    abrirPanelAuth("registro");
     mensajeAuth("Crea tu cuenta o inicia sesión para comprar tu ticket.", "");
     return;
   }

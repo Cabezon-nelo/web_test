@@ -228,8 +228,65 @@ main {
 .paso h3 { font-size: 15px; font-weight: 600; margin: 10px 0 4px; }
 .paso p { font-size: 13px; color: var(--color-texto-suave); margin: 0; }
 
+/* ---- Panel de cuenta (estilo Google) ---- */
+.panel-auth {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 16px;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  background: var(--color-tarjeta);
+  border: 1px solid var(--color-borde);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  z-index: 30;
+}
+
+.panel-auth-fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.panel-auth-fila .auth-tabs { margin-bottom: 0; }
+
+.panel-cerrar {
+  background: transparent;
+  border: none;
+  color: var(--color-texto-suave);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 50%;
+  font-family: inherit;
+}
+.panel-cerrar:hover { color: var(--color-texto); background: var(--color-hundido); }
+
+.boton-cta {
+  background: var(--color-crema);
+  color: var(--color-fondo);
+  border: none;
+  border-radius: 20px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+}
+.boton-cta:hover { background: #fffaef; }
+
+@media (max-width: 640px) {
+  .panel-auth {
+    left: 10px;
+    right: 10px;
+    width: auto;
+    max-width: none;
+  }
+}
+
 /* ---- Auth ---- */
-.auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex: 1; }
 .tab {
   flex: 1;
   padding: 10px;
