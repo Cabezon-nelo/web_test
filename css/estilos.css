@@ -99,6 +99,7 @@ main {
 .hero-linea { height: 1px; background: var(--color-borde); margin: 0 0 14px; }
 .hero p { color: var(--color-texto-suave); font-size: 15px; margin: 0 0 16px; }
 .hero-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.pills-abajo { justify-content: center; margin-top: -6px; }
 
 .pill {
   display: inline-block;
@@ -130,9 +131,10 @@ main {
 .sorteo-imagen {
   width: 100%;
   aspect-ratio: 4 / 3;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 12px;
-  background: var(--color-hundido);
+  background: var(--color-crema);
+  padding: 14px;
 }
 
 .sorteo-imagen-vacia {

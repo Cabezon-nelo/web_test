@@ -58,7 +58,10 @@ async function cargarSorteoAdmin() {
         <label>Descripción
           <input type="text" id="nuevo-descripcion">
         </label>
-        <label>URL de la imagen (opcional)
+        <label>Imagen del producto (svg, png, jpg o webp)
+          <input type="file" id="nuevo-archivo" accept=".svg,.png,.jpg,.jpeg,.webp,image/*">
+        </label>
+        <label>… o URL de una imagen (se ignora si subes archivo)
           <input type="url" id="nuevo-imagen">
         </label>
         <label>Precio por ticket (CLP)
@@ -101,7 +104,10 @@ async function cargarSorteoAdmin() {
         <label>Descripción
           <input type="text" id="editar-descripcion">
         </label>
-        <label>URL de la imagen (opcional)
+        <label>Subir nueva imagen (svg, png, jpg o webp)
+          <input type="file" id="editar-archivo" accept=".svg,.png,.jpg,.jpeg,.webp,image/*">
+        </label>
+        <label>… o URL de una imagen (se ignora si subes archivo)
           <input type="url" id="editar-imagen">
         </label>
         <label>Precio por ticket (CLP) — aplica solo a las compras siguientes
@@ -127,12 +133,19 @@ async function cargarSorteoAdmin() {
 
 async function guardarSorteo(evento, id) {
   evento.preventDefault();
+
+  const subida = await subirImagen("editar-archivo");
+  if (subida.error) {
+    mensajeSorteo(`No se pudo subir la imagen: ${subida.error.message}`, "error");
+    return;
+  }
+
   const { error } = await db
     .from("sorteos")
     .update({
       nombre: document.getElementById("editar-nombre").value.trim(),
       descripcion: document.getElementById("editar-descripcion").value.trim(),
-      imagen_url: document.getElementById("editar-imagen").value.trim() || null,
+      imagen_url: subida.url || document.getElementById("editar-imagen").value.trim() || null,
       precio: parseInt(document.getElementById("editar-precio").value, 10),
       rango_minimo: parseInt(document.getElementById("editar-rango").value, 10),
     })
@@ -151,12 +164,37 @@ function mensajeSorteo(texto, tipo) {
   p.className = `mensaje ${tipo || ""}`;
 }
 
+// Sube el archivo elegido al bucket "imagenes" y devuelve su URL pública.
+// Si no se eligió archivo, devuelve null (se usará la URL escrita a mano).
+async function subirImagen(inputId) {
+  const input = document.getElementById(inputId);
+  const archivo = input && input.files && input.files[0];
+  if (!archivo) return { url: null };
+
+  const extension = archivo.name.split(".").pop().toLowerCase();
+  const ruta = `sorteos/${Date.now()}.${extension}`;
+  const { error } = await db.storage.from("imagenes").upload(ruta, archivo, {
+    contentType: archivo.type || undefined,
+  });
+  if (error) return { error };
+
+  const { data } = db.storage.from("imagenes").getPublicUrl(ruta);
+  return { url: data.publicUrl };
+}
+
 async function crearSorteo(evento) {
   evento.preventDefault();
+
+  const subida = await subirImagen("nuevo-archivo");
+  if (subida.error) {
+    mensajeSorteo(`No se pudo subir la imagen: ${subida.error.message}`, "error");
+    return;
+  }
+
   const { error } = await db.from("sorteos").insert({
     nombre: document.getElementById("nuevo-nombre").value.trim(),
     descripcion: document.getElementById("nuevo-descripcion").value.trim(),
-    imagen_url: document.getElementById("nuevo-imagen").value.trim() || null,
+    imagen_url: subida.url || document.getElementById("nuevo-imagen").value.trim() || null,
     precio: parseInt(document.getElementById("nuevo-precio").value, 10),
     rango_minimo: parseInt(document.getElementById("nuevo-rango").value, 10),
     estado: "activo",
