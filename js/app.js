@@ -80,6 +80,12 @@ function ocultarMensajeAuth() {
   document.getElementById("auth-mensaje").classList.add("oculto");
 }
 
+// URL exacta de esta página, para que los correos de verificación
+// redirijan aquí y no al Site URL configurado en Supabase.
+function urlDelSitio() {
+  return window.location.origin + window.location.pathname;
+}
+
 async function registrarse(evento) {
   evento.preventDefault();
   const nombre = document.getElementById("registro-nombre").value.trim();
@@ -89,7 +95,7 @@ async function registrarse(evento) {
   const { error } = await db.auth.signUp({
     email,
     password,
-    options: { data: { nombre } },
+    options: { data: { nombre }, emailRedirectTo: urlDelSitio() },
   });
   if (error) {
     mensajeAuth(traducirErrorAuth(error.message), "error");
@@ -108,6 +114,18 @@ async function iniciarSesion(evento) {
 
   const { error } = await db.auth.signInWithPassword({ email, password });
   if (error) {
+    if (error.message.includes("Email not confirmed")) {
+      await db.auth.resend({
+        type: "signup",
+        email,
+        options: { emailRedirectTo: urlDelSitio() },
+      });
+      mensajeAuth(
+        "Tu correo aún no está verificado. Te acabamos de reenviar el correo de verificación: ábrelo y vuelve a iniciar sesión.",
+        "",
+      );
+      return;
+    }
     mensajeAuth(traducirErrorAuth(error.message), "error");
     return;
   }
