@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de administración — Sorteos</title>
+  <title>EBP Producciones — Panel de administración</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 
   <header class="cabecera">
     <div class="cabecera-contenido">
-      <span class="logo">🎟️ Sorteos — Admin</span>
+      <div class="marca">
+        <span class="marca-logo">EBP</span>
+        <span class="marca-nombre">EBP Producciones — Admin</span>
+      </div>
       <nav id="nav-sesion">
         <a href="index.html">Ver sitio</a>
         <button class="boton-secundario" onclick="cerrarSesion()">Salir</button>
@@ -53,6 +59,11 @@
     </div>
 
   </main>
+
+  <footer class="pie">
+    <span class="marca-agua">@EBP_PRODUCCIONES 2026</span>
+    <span>Panel de administración</span>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="js/config.js"></script>

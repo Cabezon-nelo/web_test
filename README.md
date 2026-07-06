@@ -32,6 +32,8 @@ automáticamente** cuando queda menos del 20% disponible.
 
 1. Crea un proyecto en [supabase.com](https://supabase.com) (plan gratuito sirve).
 2. En **SQL Editor**, pega y ejecuta el contenido completo de [`supabase/schema.sql`](supabase/schema.sql).
+   Luego ejecuta también [`supabase/storage.sql`](supabase/storage.sql), que crea el bucket
+   público `imagenes` para subir las fotos/SVG de los sorteos desde el panel admin.
 3. En **Authentication > Providers > Email**, verifica que "Confirm email" esté activado
    (viene activado por defecto). En **Authentication > URL Configuration**, agrega la URL
    del sitio (GitHub Pages) como Site URL y Redirect URL.

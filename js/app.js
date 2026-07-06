@@ -22,17 +22,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   renderizarNav();
   renderizarAuth();
+  mostrarVistaActual();
   await cargarSorteo();
   await cargarMisNumeros();
   await procesarRetornoFlow();
 });
+
+// ---------- Vistas (truco de cambio de página en el mismo HTML) ----------
+
+function mostrarVistaActual() {
+  const vista = window.location.hash === "#como-participar" ? "ayuda" : "sorteo";
+  document.getElementById("vista-sorteo").classList.toggle("oculto", vista !== "sorteo");
+  document.getElementById("vista-ayuda").classList.toggle("oculto", vista !== "ayuda");
+  document.getElementById("enlace-sorteo").classList.toggle("activo", vista === "sorteo");
+  document.getElementById("enlace-ayuda").classList.toggle("activo", vista === "ayuda");
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", mostrarVistaActual);
 
 // ---------- Navegación / sesión ----------
 
 async function renderizarNav() {
   const nav = document.getElementById("nav-sesion");
   if (!sesionActual) {
-    nav.innerHTML = '<button class="boton-secundario" onclick="irAlAcceso()">Iniciar sesión</button>';
+    nav.innerHTML = `
+      <button id="boton-nav-login" class="boton-secundario" onclick="alternarPanelAuth('login')">Iniciar sesión</button>
+      <button id="boton-nav-registro" class="boton-cta" onclick="alternarPanelAuth('registro')">Crear cuenta</button>
+    `;
     return;
   }
   const email = sesionActual.user.email;
@@ -53,21 +70,64 @@ async function renderizarNav() {
 }
 
 function renderizarAuth() {
-  const seccion = document.getElementById("seccion-auth");
-  seccion.classList.toggle("oculto", !!sesionActual);
+  if (sesionActual) cerrarPanelAuth();
   document.getElementById("seccion-numeros").classList.toggle("oculto", !sesionActual);
 }
 
-function irAlAcceso() {
-  document.getElementById("seccion-auth").scrollIntoView({ behavior: "smooth" });
+// ---------- Panel de cuenta (estilo Google) ----------
+
+function abrirPanelAuth(tab) {
+  document.getElementById("panel-auth").classList.remove("oculto");
+  mostrarTab(tab || "login");
 }
 
+function cerrarPanelAuth() {
+  document.getElementById("panel-auth").classList.add("oculto");
+  marcarBotonesNav();
+}
+
+// Cerrar al hacer clic fuera de la cabecera o con Escape
+document.addEventListener("click", (evento) => {
+  const panel = document.getElementById("panel-auth");
+  if (!panel || panel.classList.contains("oculto")) return;
+  if (!evento.target.closest(".cabecera")) cerrarPanelAuth();
+});
+
+document.addEventListener("keydown", (evento) => {
+  if (evento.key === "Escape") cerrarPanelAuth();
+});
+
+let tabActual = "login";
+
 function mostrarTab(cual) {
-  document.getElementById("tab-login").classList.toggle("activa", cual === "login");
-  document.getElementById("tab-registro").classList.toggle("activa", cual === "registro");
+  tabActual = cual;
   document.getElementById("form-login").classList.toggle("oculto", cual !== "login");
   document.getElementById("form-registro").classList.toggle("oculto", cual !== "registro");
+  document.getElementById("panel-titulo").textContent =
+    cual === "login" ? "Iniciar sesión" : "Crear cuenta";
+  marcarBotonesNav();
   ocultarMensajeAuth();
+}
+
+// Pinta de verde el botón de la cabecera que corresponde al panel abierto
+function marcarBotonesNav() {
+  const abierto = !document.getElementById("panel-auth").classList.contains("oculto");
+  const botonLogin = document.getElementById("boton-nav-login");
+  const botonRegistro = document.getElementById("boton-nav-registro");
+  if (!botonLogin || !botonRegistro) return;
+  botonLogin.classList.toggle("seleccionado", abierto && tabActual === "login");
+  botonRegistro.classList.toggle("seleccionado", abierto && tabActual === "registro");
+}
+
+// Abre el panel en la pestaña pedida; si ya está abierto en esa misma, lo cierra
+function alternarPanelAuth(tab) {
+  const panel = document.getElementById("panel-auth");
+  const abierto = !panel.classList.contains("oculto");
+  if (abierto && tabActual === tab) {
+    cerrarPanelAuth();
+    return;
+  }
+  abrirPanelAuth(tab);
 }
 
 function mensajeAuth(texto, tipo) {
@@ -173,7 +233,7 @@ async function cargarSorteo() {
           <label for="compra-cantidad">Cantidad</label>
           <select id="compra-cantidad">${opciones}</select>
         </div>
-        <button class="boton-principal" id="boton-comprar" onclick="comprar()">Comprar y participar</button>
+        <button class="boton-principal" id="boton-comprar" onclick="comprar(event)">Comprar y participar</button>
         <p class="nota-pago">Pago seguro con Flow — Webpay, tarjetas de crédito y débito.
         Cada ticket incluye de regalo un número único de sorteo.</p>
       </div>
@@ -210,11 +270,10 @@ async function mostrarUltimoResultado(seccion) {
 
 // ---------- Compra ----------
 
-async function comprar() {
+async function comprar(evento) {
   if (!sesionActual) {
-    mostrarTab("registro");
-    document.getElementById("seccion-auth").classList.remove("oculto");
-    irAlAcceso();
+    if (evento) evento.stopPropagation();
+    abrirPanelAuth("registro");
     mensajeAuth("Crea tu cuenta o inicia sesión para comprar tu ticket.", "");
     return;
   }
