@@ -14,12 +14,12 @@
   <header class="cabecera">
     <div class="cabecera-contenido">
       <div class="marca">
-        <span class="marca-logo">EBP</span>
-        <span class="marca-nombre">EBP Producciones</span>
+        <span class="marca-logo" title="EBP Producciones">EBP</span>
       </div>
       <nav class="menu-vistas">
         <a href="#sorteo" id="enlace-sorteo" class="enlace-vista activo">Sorteo</a>
         <a href="#como-participar" id="enlace-ayuda" class="enlace-vista">Cómo participar</a>
+        <a href="#mi-cuenta" id="enlace-cuenta" class="enlace-vista oculto">Mi cuenta</a>
       </nav>
       <nav id="nav-sesion">
         <!-- app.js pinta aquí el estado de sesión -->
@@ -89,12 +89,6 @@
       <span class="pill pill-oliva">Resultado transparente</span>
     </div>
 
-    <!-- Mis tickets y números -->
-    <section id="seccion-numeros" class="tarjeta oculto">
-      <h2>Mis tickets y números</h2>
-      <div id="lista-numeros"></div>
-    </section>
-
     </div>
 
     <!-- Vista de ayuda: cómo participar -->
@@ -135,6 +129,44 @@
           <li>Queda guardado en "Mis tickets y números"</li>
         </ul>
       </div>
+    </section>
+
+    </div>
+
+    <!-- Vista de cuenta: compras, datos y contraseña -->
+    <div id="vista-cuenta" class="oculto">
+
+    <section id="seccion-numeros" class="tarjeta oculto">
+      <h2>Mis tickets y números</h2>
+      <div id="lista-numeros"></div>
+    </section>
+
+    <section class="tarjeta">
+      <h2>Mis datos</h2>
+      <form onsubmit="guardarDatos(event)">
+        <label>Nombre
+          <input type="text" id="cuenta-nombre" required autocomplete="name">
+        </label>
+        <label>Correo electrónico (no se puede cambiar)
+          <input type="email" id="cuenta-email" disabled>
+        </label>
+        <button type="submit" class="boton-principal">Guardar datos</button>
+      </form>
+      <p id="cuenta-mensaje" class="mensaje oculto"></p>
+    </section>
+
+    <section class="tarjeta">
+      <h2>Cambiar contraseña</h2>
+      <form onsubmit="cambiarPassword(event)">
+        <label>Nueva contraseña (mínimo 6 caracteres)
+          <input type="password" id="cuenta-password" required minlength="6" autocomplete="new-password">
+        </label>
+        <label>Repite la nueva contraseña
+          <input type="password" id="cuenta-password2" required minlength="6" autocomplete="new-password">
+        </label>
+        <button type="submit" class="boton-principal">Actualizar contraseña</button>
+      </form>
+      <p id="password-mensaje" class="mensaje oculto"></p>
     </section>
 
     </div>

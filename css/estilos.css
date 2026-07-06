@@ -88,6 +88,17 @@ main {
   gap: 20px;
 }
 
+#vista-sorteo, #vista-ayuda, #vista-cuenta {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+form input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* ---- Hero ---- */
 .hero { padding: 18px 4px 0; }
 .hero h1 {
