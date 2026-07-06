@@ -41,7 +41,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .marca { display: flex; align-items: center; gap: 10px; }
@@ -59,6 +60,20 @@ body {
   letter-spacing: 0.5px;
 }
 .marca-nombre { font-weight: 500; font-size: 15px; }
+
+.menu-vistas { display: flex; gap: 18px; }
+.enlace-vista {
+  color: var(--color-texto-suave);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 4px 0;
+  border-bottom: 2px solid transparent;
+}
+.enlace-vista:hover { color: var(--color-texto); }
+.enlace-vista.activo {
+  color: var(--color-texto);
+  border-bottom-color: var(--color-amarillo);
+}
 
 #nav-sesion { display: flex; align-items: center; gap: 12px; font-size: 14px; flex-wrap: wrap; }
 #nav-sesion .usuario { color: var(--color-texto-suave); font-size: 13px; }
@@ -420,6 +435,16 @@ form input:focus { outline: 2px solid var(--color-amarillo); border-color: var(-
 }
 .estadistica .valor { font-size: 22px; font-weight: 600; color: var(--color-amarillo); }
 .estadistica .titulo { font-size: 12px; color: var(--color-texto-suave); }
+
+.editar-sorteo { margin-top: 16px; }
+.editar-sorteo summary {
+  cursor: pointer;
+  color: var(--color-amarillo);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 0;
+}
+.editar-sorteo form { margin-top: 12px; }
 
 /* ---- Pie / marca de agua ---- */
 .pie {

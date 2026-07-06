@@ -22,10 +22,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   renderizarNav();
   renderizarAuth();
+  mostrarVistaActual();
   await cargarSorteo();
   await cargarMisNumeros();
   await procesarRetornoFlow();
 });
+
+// ---------- Vistas (truco de cambio de página en el mismo HTML) ----------
+
+function mostrarVistaActual() {
+  const vista = window.location.hash === "#como-participar" ? "ayuda" : "sorteo";
+  document.getElementById("vista-sorteo").classList.toggle("oculto", vista !== "sorteo");
+  document.getElementById("vista-ayuda").classList.toggle("oculto", vista !== "ayuda");
+  document.getElementById("enlace-sorteo").classList.toggle("activo", vista === "sorteo");
+  document.getElementById("enlace-ayuda").classList.toggle("activo", vista === "ayuda");
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", mostrarVistaActual);
 
 // ---------- Navegación / sesión ----------
 

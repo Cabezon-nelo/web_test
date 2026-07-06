@@ -17,6 +17,10 @@
         <span class="marca-logo">EBP</span>
         <span class="marca-nombre">EBP Producciones</span>
       </div>
+      <nav class="menu-vistas">
+        <a href="#sorteo" id="enlace-sorteo" class="enlace-vista activo">Sorteo</a>
+        <a href="#como-participar" id="enlace-ayuda" class="enlace-vista">Cómo participar</a>
+      </nav>
       <nav id="nav-sesion">
         <!-- app.js pinta aquí el estado de sesión -->
       </nav>
@@ -58,6 +62,9 @@
 
   <main>
 
+    <!-- Vista principal: sorteo -->
+    <div id="vista-sorteo">
+
     <!-- Hero -->
     <section class="hero">
       <h1>Compra tu ticket.<br>Gana con tu número.</h1>
@@ -80,7 +87,17 @@
       <p class="cargando">Cargando sorteo…</p>
     </section>
 
-    <!-- Cómo participar -->
+    <!-- Mis tickets y números -->
+    <section id="seccion-numeros" class="tarjeta oculto">
+      <h2>Mis tickets y números</h2>
+      <div id="lista-numeros"></div>
+    </section>
+
+    </div>
+
+    <!-- Vista de ayuda: cómo participar -->
+    <div id="vista-ayuda" class="oculto">
+
     <section class="ayuda">
       <h2 class="ayuda-encabezado">¿Cómo participar?</h2>
       <div class="ayuda-banda banda-crema">
@@ -118,11 +135,7 @@
       </div>
     </section>
 
-    <!-- Mis tickets y números -->
-    <section id="seccion-numeros" class="tarjeta oculto">
-      <h2>Mis tickets y números</h2>
-      <div id="lista-numeros"></div>
-    </section>
+    </div>
 
   </main>
 
