@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     sesionActual = session;
     renderizarNav();
     renderizarAuth();
+    mostrarVistaActual();
     cargarMisNumeros();
+    cargarDatosCuenta();
   });
 
   renderizarNav();
@@ -25,17 +27,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   mostrarVistaActual();
   await cargarSorteo();
   await cargarMisNumeros();
+  await cargarDatosCuenta();
   await procesarRetornoFlow();
 });
 
 // ---------- Vistas (truco de cambio de página en el mismo HTML) ----------
 
 function mostrarVistaActual() {
-  const vista = window.location.hash === "#como-participar" ? "ayuda" : "sorteo";
+  let vista = "sorteo";
+  if (window.location.hash === "#como-participar") vista = "ayuda";
+  if (window.location.hash === "#mi-cuenta") vista = sesionActual ? "cuenta" : "sorteo";
   document.getElementById("vista-sorteo").classList.toggle("oculto", vista !== "sorteo");
   document.getElementById("vista-ayuda").classList.toggle("oculto", vista !== "ayuda");
+  document.getElementById("vista-cuenta").classList.toggle("oculto", vista !== "cuenta");
   document.getElementById("enlace-sorteo").classList.toggle("activo", vista === "sorteo");
   document.getElementById("enlace-ayuda").classList.toggle("activo", vista === "ayuda");
+  document.getElementById("enlace-cuenta").classList.toggle("activo", vista === "cuenta");
   window.scrollTo(0, 0);
 }
 
@@ -52,7 +59,6 @@ async function renderizarNav() {
     `;
     return;
   }
-  const email = sesionActual.user.email;
   let enlaceAdmin = "";
   const { data: perfil } = await db
     .from("perfiles")
@@ -64,7 +70,6 @@ async function renderizarNav() {
   }
   nav.innerHTML = `
     ${enlaceAdmin}
-    <span class="usuario">${email}</span>
     <button class="boton-secundario" onclick="cerrarSesion()">Salir</button>
   `;
 }
@@ -72,6 +77,7 @@ async function renderizarNav() {
 function renderizarAuth() {
   if (sesionActual) cerrarPanelAuth();
   document.getElementById("seccion-numeros").classList.toggle("oculto", !sesionActual);
+  document.getElementById("enlace-cuenta").classList.toggle("oculto", !sesionActual);
 }
 
 // ---------- Panel de cuenta (estilo Google) ----------
@@ -376,9 +382,13 @@ async function cargarMisNumeros() {
   if (!sesionActual) return;
   const lista = document.getElementById("lista-numeros");
 
+  // Filtro explícito por usuario: las políticas RLS ya limitan a cada
+  // usuario a lo suyo, pero una cuenta admin puede ver todo, y aquí
+  // solo corresponde mostrar SUS compras personales.
+  const miId = sesionActual.user.id;
   const [{ data: numeros }, { data: ordenes }] = await Promise.all([
-    db.from("numeros").select("numero, sorteo_id, sorteos(nombre)").order("asignado_en", { ascending: false }),
-    db.from("ordenes").select("cantidad, monto, estado, creado_en").order("creado_en", { ascending: false }).limit(10),
+    db.from("numeros").select("numero, sorteo_id, sorteos(nombre)").eq("user_id", miId).order("asignado_en", { ascending: false }),
+    db.from("ordenes").select("cantidad, monto, estado, creado_en").eq("user_id", miId).order("creado_en", { ascending: false }).limit(10),
   ]);
 
   let html = "";
@@ -406,4 +416,55 @@ async function cargarMisNumeros() {
   }
 
   lista.innerHTML = html;
+}
+
+// ---------- Mi cuenta: datos personales y contraseña ----------
+
+function mostrarMensajeEn(id, texto, tipo) {
+  const p = document.getElementById(id);
+  p.textContent = texto;
+  p.className = `mensaje ${tipo || ""}`;
+}
+
+async function cargarDatosCuenta() {
+  if (!sesionActual) return;
+  document.getElementById("cuenta-email").value = sesionActual.user.email;
+  const { data: perfil } = await db
+    .from("perfiles")
+    .select("nombre")
+    .eq("id", sesionActual.user.id)
+    .single();
+  document.getElementById("cuenta-nombre").value = (perfil && perfil.nombre) || "";
+}
+
+async function guardarDatos(evento) {
+  evento.preventDefault();
+  const nombre = document.getElementById("cuenta-nombre").value.trim();
+  const { error } = await db.rpc("actualizar_nombre", { p_nombre: nombre });
+  if (error) {
+    mostrarMensajeEn("cuenta-mensaje", `No se pudo guardar: ${error.message}`, "error");
+    return;
+  }
+  mostrarMensajeEn("cuenta-mensaje", "Datos guardados.", "exito");
+}
+
+async function cambiarPassword(evento) {
+  evento.preventDefault();
+  const nueva = document.getElementById("cuenta-password").value;
+  const repetida = document.getElementById("cuenta-password2").value;
+  if (nueva !== repetida) {
+    mostrarMensajeEn("password-mensaje", "Las contraseñas no coinciden.", "error");
+    return;
+  }
+  const { error } = await db.auth.updateUser({ password: nueva });
+  if (error) {
+    const detalle = error.message.includes("different from the old")
+      ? "La nueva contraseña debe ser distinta de la actual."
+      : error.message;
+    mostrarMensajeEn("password-mensaje", `No se pudo actualizar: ${detalle}`, "error");
+    return;
+  }
+  document.getElementById("cuenta-password").value = "";
+  document.getElementById("cuenta-password2").value = "";
+  mostrarMensajeEn("password-mensaje", "Contraseña actualizada.", "exito");
 }
