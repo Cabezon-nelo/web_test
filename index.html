@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sorteos — Compra tu ticket y participa</title>
+  <title>EBP Producciones — Sorteos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/estilos.css">
 </head>
 <body>
 
   <header class="cabecera">
     <div class="cabecera-contenido">
-      <span class="logo">🎟️ Sorteos</span>
+      <div class="marca">
+        <span class="marca-logo">EBP</span>
+        <span class="marca-nombre">EBP Producciones</span>
+      </div>
       <nav id="nav-sesion">
         <!-- app.js pinta aquí el estado de sesión -->
       </nav>
@@ -18,6 +24,18 @@
   </header>
 
   <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1>Compra tu ticket.<br>Gana con tu número.</h1>
+      <div class="hero-linea"></div>
+      <p>Cada ticket incluye de regalo un número único para el sorteo, asignado al azar cuando tu pago se confirma.</p>
+      <div class="hero-pills">
+        <span class="pill pill-crema">Pago seguro con Flow</span>
+        <span class="pill pill-amarilla">Número de regalo</span>
+        <span class="pill pill-oliva">Resultado transparente</span>
+      </div>
+    </section>
 
     <!-- Aviso de retorno desde Flow (resultado de la compra) -->
     <section id="seccion-resultado" class="tarjeta oculto">
@@ -90,7 +108,8 @@
   </main>
 
   <footer class="pie">
-    <p>Pago procesado por Flow. El número de sorteo es un regalo asociado a la compra de tu ticket.</p>
+    <span class="marca-agua">@EBP_PRODUCCIONES 2026</span>
+    <span>Pago procesado por Flow. El número de sorteo es un regalo asociado a la compra de tu ticket.</span>
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
