@@ -33,8 +33,8 @@ async function renderizarNav() {
   const nav = document.getElementById("nav-sesion");
   if (!sesionActual) {
     nav.innerHTML = `
-      <button class="boton-secundario" onclick="abrirPanelAuth('login')">Iniciar sesión</button>
-      <button class="boton-cta" onclick="abrirPanelAuth('registro')">Crear cuenta</button>
+      <button id="boton-nav-login" class="boton-secundario" onclick="alternarPanelAuth('login')">Iniciar sesión</button>
+      <button id="boton-nav-registro" class="boton-cta" onclick="alternarPanelAuth('registro')">Crear cuenta</button>
     `;
     return;
   }
@@ -69,6 +69,7 @@ function abrirPanelAuth(tab) {
 
 function cerrarPanelAuth() {
   document.getElementById("panel-auth").classList.add("oculto");
+  marcarBotonesNav();
 }
 
 // Cerrar al hacer clic fuera de la cabecera o con Escape
@@ -82,12 +83,37 @@ document.addEventListener("keydown", (evento) => {
   if (evento.key === "Escape") cerrarPanelAuth();
 });
 
+let tabActual = "login";
+
 function mostrarTab(cual) {
-  document.getElementById("tab-login").classList.toggle("activa", cual === "login");
-  document.getElementById("tab-registro").classList.toggle("activa", cual === "registro");
+  tabActual = cual;
   document.getElementById("form-login").classList.toggle("oculto", cual !== "login");
   document.getElementById("form-registro").classList.toggle("oculto", cual !== "registro");
+  document.getElementById("panel-titulo").textContent =
+    cual === "login" ? "Iniciar sesión" : "Crear cuenta";
+  marcarBotonesNav();
   ocultarMensajeAuth();
+}
+
+// Pinta de verde el botón de la cabecera que corresponde al panel abierto
+function marcarBotonesNav() {
+  const abierto = !document.getElementById("panel-auth").classList.contains("oculto");
+  const botonLogin = document.getElementById("boton-nav-login");
+  const botonRegistro = document.getElementById("boton-nav-registro");
+  if (!botonLogin || !botonRegistro) return;
+  botonLogin.classList.toggle("seleccionado", abierto && tabActual === "login");
+  botonRegistro.classList.toggle("seleccionado", abierto && tabActual === "registro");
+}
+
+// Abre el panel en la pestaña pedida; si ya está abierto en esa misma, lo cierra
+function alternarPanelAuth(tab) {
+  const panel = document.getElementById("panel-auth");
+  const abierto = !panel.classList.contains("oculto");
+  if (abierto && tabActual === tab) {
+    cerrarPanelAuth();
+    return;
+  }
+  abrirPanelAuth(tab);
 }
 
 function mensajeAuth(texto, tipo) {

@@ -25,10 +25,7 @@
     <!-- Menú de cuenta flotante (estilo Google) -->
     <div id="panel-auth" class="panel-auth oculto">
       <div class="panel-auth-fila">
-        <div class="auth-tabs">
-          <button id="tab-login" class="tab activa" onclick="mostrarTab('login')">Iniciar sesión</button>
-          <button id="tab-registro" class="tab" onclick="mostrarTab('registro')">Crear cuenta</button>
-        </div>
+        <p id="panel-titulo" class="panel-titulo">Iniciar sesión</p>
         <button class="panel-cerrar" onclick="cerrarPanelAuth()" aria-label="Cerrar">✕</button>
       </div>
 
@@ -83,22 +80,41 @@
       <p class="cargando">Cargando sorteo…</p>
     </section>
 
-    <!-- Cómo funciona -->
-    <section class="pasos">
-      <div class="paso">
-        <span class="paso-numero">1</span>
-        <h3>Crea tu cuenta</h3>
-        <p>Regístrate con tu correo y verifícalo. Es gratis y toma un minuto.</p>
+    <!-- Cómo participar -->
+    <section class="ayuda">
+      <h2 class="ayuda-encabezado">¿Cómo participar?</h2>
+      <div class="ayuda-banda banda-crema">
+        <div class="ayuda-titulo">
+          <span class="ayuda-numero">1</span>
+          <h3>Crea <br>tu cuenta</h3>
+        </div>
+        <ul class="ayuda-lista">
+          <li>Regístrate con tu correo</li>
+          <li>Verifícalo con el enlace que te enviamos</li>
+          <li>Es gratis y toma un minuto</li>
+        </ul>
       </div>
-      <div class="paso">
-        <span class="paso-numero">2</span>
-        <h3>Compra tu ticket</h3>
-        <p>Paga seguro con Flow: Webpay, tarjetas de crédito o débito.</p>
+      <div class="ayuda-banda banda-verde">
+        <div class="ayuda-titulo">
+          <span class="ayuda-numero">2</span>
+          <h3>Compra <br>tu ticket</h3>
+        </div>
+        <ul class="ayuda-lista">
+          <li>Paga seguro con Flow</li>
+          <li>Webpay, tarjetas de crédito o débito</li>
+          <li>Puedes llevar más de un ticket</li>
+        </ul>
       </div>
-      <div class="paso">
-        <span class="paso-numero">3</span>
-        <h3>Recibe tu número</h3>
-        <p>Cada ticket incluye de regalo un número único para el sorteo, asignado al azar.</p>
+      <div class="ayuda-banda banda-oscura">
+        <div class="ayuda-titulo">
+          <span class="ayuda-numero">3</span>
+          <h3>Recibe <br>tu número</h3>
+        </div>
+        <ul class="ayuda-lista">
+          <li>Un número único de regalo por cada ticket</li>
+          <li>Se asigna al azar cuando el pago se confirma</li>
+          <li>Queda guardado en "Mis tickets y números"</li>
+        </ul>
       </div>
     </section>
 

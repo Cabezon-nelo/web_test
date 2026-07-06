@@ -8,6 +8,7 @@
   --color-crema: #f2ebdd;
   --color-amarillo: #f4c430;
   --color-oliva: #7d8570;
+  --color-verde-sel: #626a53;
   --color-exito: #a8c99a;
   --color-exito-fondo: #2c3526;
   --color-error: #f0a0a0;
@@ -202,31 +203,66 @@ main {
 
 .nota-pago { font-size: 12px; color: var(--color-texto-suave); text-align: center; margin: 10px 0 0; }
 
-/* ---- Pasos ---- */
-.pasos {
+/* ---- Cómo participar (bandas apiladas) ---- */
+.ayuda-encabezado {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 6px 4px 16px;
+}
+
+.ayuda-banda {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 20px;
+  align-items: center;
+  padding: 30px 32px;
+  border-radius: 28px;
+  position: relative;
 }
-.paso {
-  background: var(--color-tarjeta);
-  border-radius: var(--radio);
-  padding: 20px;
+.ayuda-banda:not(:last-child) { padding-bottom: 60px; }
+.ayuda-banda + .ayuda-banda { margin-top: -30px; }
+
+.banda-crema { background: var(--color-crema); color: #211f19; }
+.banda-verde { background: var(--color-verde-sel); color: var(--color-crema); }
+.banda-oscura { background: #191813; color: var(--color-crema); }
+
+.ayuda-titulo { display: flex; align-items: flex-start; gap: 14px; }
+.ayuda-titulo h3 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
 }
-.paso-numero {
+
+.ayuda-numero {
   display: inline-flex;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   background: var(--color-amarillo);
-  color: var(--color-fondo);
-  font-weight: 600;
-  font-size: 14px;
+  color: #211f19;
+  font-weight: 700;
+  font-size: 15px;
 }
-.paso h3 { font-size: 15px; font-weight: 600; margin: 10px 0 4px; }
-.paso p { font-size: 13px; color: var(--color-texto-suave); margin: 0; }
+.banda-crema .ayuda-numero { background: #211f19; color: var(--color-crema); }
+
+.ayuda-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+.ayuda-lista li::before { content: "•"; margin-right: 10px; }
+.banda-crema .ayuda-lista { color: #3a382f; }
+.banda-verde .ayuda-lista,
+.banda-oscura .ayuda-lista { color: var(--color-amarillo); }
 
 /* ---- Panel de cuenta (estilo Google) ---- */
 .panel-auth {
@@ -249,7 +285,6 @@ main {
   gap: 8px;
   margin-bottom: 18px;
 }
-.panel-auth-fila .auth-tabs { margin-bottom: 0; }
 
 .panel-cerrar {
   background: transparent;
@@ -286,23 +321,17 @@ main {
 }
 
 /* ---- Auth ---- */
-.auth-tabs { display: flex; gap: 8px; margin-bottom: 18px; flex: 1; }
-.tab {
+.panel-titulo {
   flex: 1;
-  padding: 10px;
-  border: 1px solid var(--color-borde);
-  background: transparent;
-  border-radius: 20px;
-  font-size: 14px;
-  font-family: inherit;
-  cursor: pointer;
-  color: var(--color-texto-suave);
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
 }
-.tab.activa {
-  background: var(--color-crema);
-  color: var(--color-fondo);
-  border-color: var(--color-crema);
-  font-weight: 500;
+
+#nav-sesion .seleccionado {
+  background: var(--color-verde-sel);
+  color: var(--color-crema);
+  border-color: var(--color-verde-sel);
 }
 
 form label { display: block; font-size: 14px; margin-bottom: 12px; }
@@ -416,4 +445,7 @@ form input:focus { outline: 2px solid var(--color-amarillo); border-color: var(-
 @media (max-width: 640px) {
   .sorteo-grid { grid-template-columns: 1fr; }
   .hero h1 { font-size: 26px; }
+  .ayuda-banda { grid-template-columns: 1fr; gap: 14px; padding: 24px; }
+  .ayuda-banda:not(:last-child) { padding-bottom: 54px; }
+  .ayuda-titulo h3 br { display: none; }
 }
